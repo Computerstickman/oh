@@ -6,6 +6,8 @@ class Tounge extends Phaser.GameObjects.Sprite {
         this.isFiring = false;      // track rocket's firing status
         this.moveSpeed = 2;         // pixels per frame
         this.sfxRocket = scene.sound.add('sfx_rocket')  // add rocket sfx
+        this.clickX = 0;
+        this.clickY = 0;
     }
 
     update() {
@@ -13,13 +15,16 @@ class Tounge extends Phaser.GameObjects.Sprite {
         if(Phaser.Input.Pointer.leftButtonDown() && !this.isFiring) {
             this.isFiring = true;
             this.sfxRocket.play();
+            this.clickX = Phaser.Input.Pointer.x;
+            this.clickY = Phaser.Input.Pointer.y;
+
         }
         // if fired, move to click position
-        if(this.isFiring && this.y >= borderUISize * 3 + borderPadding) {
-            this.y -= this.moveSpeed;
+        if(this.isFiring && this.y >= clickY * 3 + borderPadding) {
+            
         }
         // reset on miss
-        if(this.y <= borderUISize * 3 + borderPadding) {
+        if(this.y = clickY) {
             this.reset();
         }
     }

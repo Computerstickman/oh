@@ -6,6 +6,7 @@ class Play extends Phaser.Scene {
     preload() {
         // load images/tile sprites
         this.load.image('pinkidle', './assets/pink1.png');
+        this.load.image('tounge', './assets/tounge.png');
         this.load.image('hooves', './assets/hooves.png');
         this.load.image('muffin', './assets/muffin.png');
         this.load.image('cupcake', './assets/cupcake.png');
@@ -16,6 +17,7 @@ class Play extends Phaser.Scene {
 
         // add pinkie
         this.pinkie = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'pinkidle').setOrigin(0.5, 1);
+        this.tounge = new Tounge(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'tounge').setOrigin(0.5, 1);
         //add tounge
         // add Spaceships (x3)
         this.muffin = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'muffin', 0, 30).setOrigin(0, 0);
