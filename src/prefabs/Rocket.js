@@ -10,26 +10,7 @@ class Rocket extends Phaser.GameObjects.Sprite {
     }
 
     update() {
-        // left/right movement
-
-        // fire button
-        if(Phaser.Input.Keyboard.JustDown(keyF) && !this.isFiring) {
-            this.isFiring = true;
-            this.sfxRocket.play();
-        }
-        // if fired, move up
-        if(this.isFiring && this.y >= borderUISize * 3 + borderPadding) {
-            this.y -= this.moveSpeed;
-        }
-        // reset on miss
-        if(this.y <= borderUISize * 3 + borderPadding) {
-            this.reset();
-        }
+        
     }
 
-    // reset rocket to "ground"
-    reset() {
-        this.isFiring = false;
-        this.y = game.config.height - borderUISize - borderPadding;
-    }
 }
