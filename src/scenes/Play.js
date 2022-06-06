@@ -15,12 +15,12 @@ class Play extends Phaser.Scene {
     create() {
 
         // add pinkie
-        this.pinkie = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'pinkidle').setOrigin(0.5, 0);
+        this.pinkie = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'pinkidle').setOrigin(0.5, 0).setDisplaySize(352, 240);
         //add tounge
         // add Spaceships (x3)
-        this.muffin = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'muffin', 0, 30).setOrigin(0, 0);
-        this.cupcake = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'cupcake', 0, 20).setOrigin(0,0);
-        this.specialcake = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'special', 0, 10).setOrigin(0,0);
+        this.muffin = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'muffin', 0, 30).setOrigin(0, 0).setDisplaySize(80, 80);
+        this.cupcake = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'cupcake', 0, 20).setOrigin(0,0).setDisplaySize(80, 80);
+        this.specialcake = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'special', 0, 10).setOrigin(0,0).setDisplaySize(80, 80);
 
         // boarders
         this.add.rectangle(0, 0, game.config.width, borderUISize, 0x8f9bff).setOrigin(0 ,0);
@@ -28,18 +28,10 @@ class Play extends Phaser.Scene {
         this.add.rectangle(0, 0, borderUISize, game.config.height, 0x8f9bff).setOrigin(0 ,0);
         this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0x8f9bff).setOrigin(0 ,0);
 
-        this.add.image(game.config.width/2, game.config.height - borderUISize - borderPadding, 'hooves');
+        this.add.image(game.config.width/2, game.config.height - borderUISize - borderPadding, 'hooves').setDisplaySize(352, 240);
         // define keys
-        this.input.on('pointerdown', function (pointer)
-        {
-            if(pointer.leftButtonDown())
-            {
-                this.add.image(pointer.x, pointer.y, 'hooves');
-            }
+        
 
-        }, this);
-
-        // animation config
         // initialize score
         this.p1Score = 0;
 
@@ -63,15 +55,27 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+        this.input.on('pointerdown', function (pointer)
+        {
+            if(pointer.leftButtonDown())
+            {
+                lClick = true;
+                clickX = pointer.x;
+                clickY = pointer.y;
+            }
+            else
+            {
+                lClick = false;
+            }
+        }, this);
         // check key input for restart / menu
         if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
         }
 
-        if(this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-            this.scene.start("menuScene");
+        if(lClick) {
+            this.add.image(clickX, clickY, 'hooves').setDisplaySize(352, 240);
         }
-
 
         if(!this.gameOver) {         // update p1
              this.muffin.update();               // update spaceship (x3)
@@ -81,33 +85,16 @@ class Play extends Phaser.Scene {
 
     }
 
-    checkCollision(rocket, ship) {
+    checkCollision(tounge, target) {
         // simple AABB checking
-        if (rocket.x < ship.x + ship.width && 
-            rocket.x + rocket.width > ship.x && 
-            rocket.y < ship.y + ship.height &&
-            rocket.height + rocket.y > ship. y) {
+        if (tounge.x < target.x + target.width && 
+            tounge.x + tounge.width > target.x && 
+            tounge.y < target.y + target.height &&
+            tounge.height + tounge.y > target. y) {
                 return true;
         } else {
             return false;
         }
     }
 
-    shipExplode(ship) {
-        // temporarily hide ship
-        ship.alpha = 0;                         
-        // create explosion sprite at ship's position
-        let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
-        boom.anims.play('explode');             // play explode animation
-        boom.on('animationcomplete', () => {    // callback after anim completes
-            ship.reset();                         // reset ship position
-            ship.alpha = 1;                       // make ship visible again
-            boom.destroy();                       // remove explosion sprite
-        });
-        // score add and repaint
-        this.p1Score += ship.points;
-        this.scoreLeft.text = this.p1Score; 
-        
-        this.sound.play('sfx_explosion');
-      }
 }
